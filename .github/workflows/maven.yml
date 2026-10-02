@@ -28,3 +28,9 @@ jobs:
       - name: Run maven tests
         run: mvn test
 
+      - name: Github inbuilt-in env variables
+        run:  |
+          echo "Repository: ${{ github.repository }}"
+          echo "Branch: ${{ github.ref }}"
+          echo "Commit: ${{ github.sha }}"
+
