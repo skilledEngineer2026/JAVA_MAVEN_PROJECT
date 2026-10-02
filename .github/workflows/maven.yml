@@ -8,6 +8,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    env: 
+      APP_NAME: GitHub Actions CI
+
     steps:
       - name: getting sourcecode
         uses: actions/checkout@v4
@@ -17,6 +21,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           cache: maven
+
+      - name: getting Application name
+        run: echo "Application name is $APP_NAME"
+
       - name: Run maven tests
         run: mvn test
 
