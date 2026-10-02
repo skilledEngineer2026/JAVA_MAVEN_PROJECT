@@ -9,6 +9,6 @@ public class HelloWorld {
         if (name == null || name.isEmpty()) {
             name = "GitHub Actions";
         }
-    System.out.println(greeter.greet(name));
+    System.out.println(Greeter.greet(name));
   }
 }
