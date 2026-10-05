@@ -63,3 +63,9 @@ jobs:
           echo "Branch: ${{ github.ref }}"
           echo "Commit: ${{ github.sha }}"
 
+      - name: Test Github-secrets
+        env:
+          DEMO_SECRET: ${{ secrets.DEMO_SECRET }}
+        run: echo "secret is available"
+
+
