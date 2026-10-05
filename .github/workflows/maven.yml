@@ -25,8 +25,14 @@ jobs:
       - name: getting Application name
         run: echo "Application name is $APP_NAME"
 
-      - name: Run maven tests
-        run: mvn test
+      - name: Run maven package
+        run: mvn package
+
+      - name: uploading generated artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-application
+          path: target/*.jar
 
       - name: Github inbuilt-in env variables
         run:  |
