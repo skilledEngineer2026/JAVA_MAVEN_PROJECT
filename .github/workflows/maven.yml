@@ -5,12 +5,15 @@ on:
   push:
     branches: [main]
 
+env: 
+  APP_NAME: GitHub Actions CI
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    env: 
-      APP_NAME: GitHub Actions CI
+    
+    outputs:
+      app-version: ${{ steps.appversion.outputs.version }} 
 
     steps:
       - name: getting sourcecode
@@ -25,6 +28,10 @@ jobs:
       - name: getting Application name
         run: echo "Application name is $APP_NAME"
 
+      - name: set application version
+        id: appversion
+        run: echo "version=1.0.0" >> "$GITHUB_OUTPUT"
+
       - name: Run maven package
         run: mvn package
 
@@ -34,7 +41,23 @@ jobs:
           name: java-application
           path: target/*.jar
 
-      - name: Github inbuilt-in env variables
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: downloading artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: java-application
+          path: ./artifact
+
+      - name: show downloaded artifacts
+        run: ls -R ./artifact
+
+      - name: deploying
+        run: echo "Deploying $APP_NAME ${{ needs.build.outputs.app-version}}"
+
+      - name: Github actions context
         run:  |
           echo "Repository: ${{ github.repository }}"
           echo "Branch: ${{ github.ref }}"
