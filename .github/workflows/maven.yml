@@ -55,6 +55,7 @@ jobs:
         run: ls -R ./artifact
 
       - name: deploying
+        if: github.ref != 'refs/heads/main'
         run: echo "Deploying $APP_NAME ${{ needs.build.outputs.app-version}}"
 
       - name: Github actions context
