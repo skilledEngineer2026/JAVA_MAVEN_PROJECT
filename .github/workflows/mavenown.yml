@@ -1,0 +1,64 @@
+---
+
+name: worflow for build and deploying java application
+on:
+  push:
+    branches: [main,develop]
+env:
+  APP_NAME: Github actions CI
+jobs:
+  BUILD:
+    runs-on: ubuntu-latest
+    outputs:
+      app-version: ${{steps.appversion.outputs.version}}
+
+    steps:
+      - name: getting sourcecode on my host machine
+        uses: actions/checkout@v4
+
+      - name: stting up java env
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      - name: setting up application version
+        id: appversion
+        run: echo "version=1.0.1" >> "$GITHUB_OUTPUT" 
+
+      - name: build application
+        run: mvn package
+
+      - name: uploading jar artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: java-application
+          path: target/*.jar
+
+  DEPLOY:
+    needs: BUILD
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: downoading artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: java-application
+          path: ./artifact
+          
+
+      - name: show downloaded files
+        run: ls -R ./artifact
+
+      - name: app version
+        run: echo "APP version is ${{ needs.BUILD.outputs.app-version }}"
+
+      - name: secrets test
+        env:
+          SECRET: ${{ secrets.TEST_SECRET}}
+        run: echo "secrets are sensitive data and to be configured in github"
+
+      - name: deploying
+        run: echo " $APP_NAME ${{ needs.BUILD.outputs.app-version }} is deploying..."
+
