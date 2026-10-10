@@ -12,8 +12,13 @@ pipeline {
 
         stage('Build') {
             steps {
-                echo 'Building Java application'
-                bat 'mvn clean package'
+                bat 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn test'
             }
         }
 
