@@ -15,14 +15,12 @@ pipeline {
         }
 
         stage('Build') {
-            stage('Build') {
             steps {
                 echo "Application: ${env.APP_NAME}"
                 echo "Environment: ${env.TARGET_ENV}"
                 bat 'mvn clean package -DskipTests'
             }
         }
-    }
 
         stage('Test') {
             steps {
