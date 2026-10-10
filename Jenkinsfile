@@ -5,7 +5,6 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Checking out source code'
                 checkout scm
             }
         }
@@ -27,6 +26,20 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar',
                                  fingerprint: true
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build successful!'
+        }
+
+        failure {
+            echo 'Build failed!'
+        }
+
+        always {
+            echo 'Pipeline finished.'
         }
     }
 }
