@@ -5,6 +5,7 @@ pipeline {
     environment {
         APP_NAME = 'java-maven-app'
         TARGET_ENV = 'dev'
+        DEMO_SECRET = credentials('demo-secret')
     }
 
     stages {
@@ -27,6 +28,14 @@ pipeline {
                 bat 'mvn test'
             }
         }
+
+        
+        stage('Check Credential') {
+            steps {
+                bat 'if defined DEMO_SECRET (echo Secret is configured) else (echo Secret is missing)'
+            }
+        }
+    
 
         stage('Archive Artifact') {
             steps {
